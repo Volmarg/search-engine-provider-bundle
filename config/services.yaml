@@ -1,0 +1,62 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    dir.search_engine_result: "%kernel.project_dir%/data/search-engine-result/"
+
+    # 2s - it might slow down offers fetching significantly, could be 30 min for 180 offers result
+    # but without the sleep the search engines could be banning the calls due to "to often calling"
+    # or this could even fall into some law-breaking and abusing the server machines
+    search_engine.sleep_time_micro: 2000000
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true        # Make all the services automatically public, excluding these in `exclude`
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    SearchEngineProvider\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Exception/'
+            - '../src/Dto/'
+
+    WebScrapperBundle\Service\ScrapEngine\HeadlessBrowserInterface: '@WebScrapperBundle\Service\ScrapEngine\HeadlessChromeScrapEngine'
+    WebScrapperBundle\Service\CrawlerEngine\CrawlerEngineServiceInterface: '@WebScrapperBundle\Service\CrawlerEngine\Goutte\GoutteCrawlerEngineService'
+    SearchEngineProvider\Service\Paid\Search\PaidEngineSearchInterface: '@SearchEngineProvider\Service\Paid\Search\BrightDataService'
+
+    SearchEngineProvider\Service\SearchEngine\SimpleDomContent\BingEngineService:
+        arguments:
+            $engineResultDirectory: '%dir.search_engine_result%'
+            $sleepTime: '%search_engine.sleep_time_micro%'
+
+    SearchEngineProvider\Service\SearchEngine\SimpleDomContent\GoogleEngineService:
+        arguments:
+            $engineResultDirectory: '%dir.search_engine_result%'
+            $sleepTime: '%search_engine.sleep_time_micro%'
+
+    SearchEngineProvider\Service\SearchEngine\SimpleDomContent\YahooEngineService:
+        arguments:
+            $engineResultDirectory: '%dir.search_engine_result%'
+            $sleepTime: '%search_engine.sleep_time_micro%'
+
+    SearchEngineProvider\Service\SearchEngine\SimpleDomContent\DuckDuckHtmlEngineService:
+        arguments:
+            $engineResultDirectory: '%dir.search_engine_result%'
+            $sleepTime: '%search_engine.sleep_time_micro%'
+
+    SearchEngineProvider\Service\SearchEngine\Crawler\EngineServiceCrawler:
+        arguments:
+            $engineResultDirectory: '%dir.search_engine_result%'
+
+    SearchEngineProvider\Service\SearchEngine\Other\DuckDuck\DuckDuckEngineService:
+        arguments:
+            $sleepTime: '%search_engine.sleep_time_micro%'
