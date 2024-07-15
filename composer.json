@@ -6,8 +6,12 @@
     "prefer-stable": true,
     "repositories": [
         {
-            "type": "path",
-            "url": "/ssd-extended-partition/www/bundles/web-scrapper-bundle"
+            "type": "vcs",
+            "url": "https://github.com/Volmarg/web-scrapper-bundle"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Volmarg/proxy-provider-bridge"
         }
     ],
     "require": {
@@ -23,7 +27,7 @@
         "symfony/monolog-bundle": "v3.7.1",
         "symfony/runtime": "6.0.*",
         "symfony/yaml": "6.0.*",
-        "volmarg/web-scrapper": "dev-master"
+        "volmarg/web-scrapper-bundle": "@dev"
     },
     "config": {
         "allow-plugins": {
@@ -46,18 +50,6 @@
         "psr-4": {
             "SearchEngineProvider\\Tests\\": "tests/"
         }
-    },
-    "scripts": {
-        "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
-        },
-        "post-install-cmd": [
-            "@auto-scripts"
-        ],
-        "post-update-cmd": [
-            "@auto-scripts"
-        ]
     },
     "conflict": {
         "symfony/symfony": "*"
