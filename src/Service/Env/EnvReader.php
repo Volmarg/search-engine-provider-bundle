@@ -18,6 +18,6 @@ class EnvReader {
             return false;
         }
 
-        return ($_ENV['IS_PROXY_ENABLED'] == 'true' || $_ENV['IS_PROXY_ENABLED'] == 1 || $_ENV['IS_PROXY_ENABLED']);
+        return ($_ENV['IS_PROXY_ENABLED'] == 'true' || $_ENV['IS_PROXY_ENABLED'] == 1 || $_ENV['IS_PROXY_ENABLED'] === true);
     }
 }
